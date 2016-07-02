@@ -12,8 +12,11 @@ an  in-house url shortener service accessible in a distributed network.
 
 from flask import Flask
 from flask.globals import request
+from mapper.mappers import to_short_url, to_long_url
+import time
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 
 @app.route('/')
 def welcome():
@@ -22,11 +25,11 @@ def welcome():
 @app.route('/tiny/short',methods=['POST'])
 def shorten_url():
     long_url = request.form['url']
-    return long_url
+    return to_short_url(long(time.time()), long_url)
 
 @app.route('/tiny/<short_url>', methods=['GET'])
 def get_long_url(short_url):
-    return short_url
+    return to_long_url(short_url)
 
 if __name__ == '__main__':
     app.run(debug=True)

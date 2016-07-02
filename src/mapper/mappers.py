@@ -16,6 +16,7 @@ Feature set is as follows:
 @version:  1.0
 @since:  1.0
 '''
+from mapper.mock import insert, get
 
 #Sequence of possible characters in a url.
 charset = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
@@ -26,17 +27,21 @@ charset = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','
 CHARSET_SIZE = 62
 
 #converts an numeric id to short url.
-def to_short_url(uuid):
+def to_short_url(uuid, long_url):
     
     short_url = ""
     while uuid:
         short_url = charset[uuid % CHARSET_SIZE] + short_url
         uuid = (uuid/CHARSET_SIZE)
     
+    #Store in the mock cache.
+    insert(short_url, long_url)
+    
+    #return the shorter version.
     return short_url
 
 #converts from short url to numeric id.
-def to_uuid(short_url):
+def to_long_url(short_url):
     
     uuid = 0
     for i in range(0, len(short_url)):    
@@ -47,4 +52,5 @@ def to_uuid(short_url):
         elif(ord('0') <= ord(short_url[i]) and ord(short_url[i]) <= ord('9')):
             uuid = ((uuid * CHARSET_SIZE) + ord(short_url[i]) - ord('0') + 52)
     
-    return uuid
+    #return uuid
+    return get(short_url)
