@@ -6,8 +6,17 @@ Created on 03-Jul-2016
 @since: 1.0.
 '''
 
+import urllib2
+
 '''
 Determines if it is a valid url.
 '''
 def validate_url(url):
-    pass
+    try:
+        urllib2.urlopen(url, timeout=10)
+    except urllib2.HTTPError, e:
+        return False
+    except urllib2.URLError, e:
+        return False
+    
+    return True
