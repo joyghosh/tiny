@@ -17,6 +17,7 @@ Feature set is as follows:
 @since:  1.0
 '''
 from mapper.mock import insert, get
+from database.cluster import get_current_uuid
 
 #Sequence of possible characters in a url.
 charset = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v',
@@ -27,9 +28,10 @@ charset = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','
 CHARSET_SIZE = 62
 
 #converts an numeric id to short url.
-def to_short_url(uuid, long_url):
+def to_short_url(long_url):
     
     short_url = ""
+    uuid = get_current_uuid()
     while uuid:
         short_url = charset[uuid % CHARSET_SIZE] + short_url
         uuid = (uuid/CHARSET_SIZE)
