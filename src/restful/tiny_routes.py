@@ -22,10 +22,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 def welcome():
     return 'Welcome to tiny.\n \'tiny\' is a scalable and light-weight URL shortener service'
 
-@app.route('/tiny/short',methods=['POST'])
+@app.route('/tiny/short',methods=['POST','GET','HEAD','PUT','DELETE'])
 def shorten_url():
-    long_url = request.form['url']
-    return to_short_url(long(time.time()), long_url)
+    if(request.method == 'POST'):
+        long_url = request.form['url']
+        return to_short_url(long(time.time()), long_url)
+    else:
+        return '<h1>Method not allowed</h1>', 405
 
 @app.route('/tiny/<short_url>', methods=['GET'])
 def get_long_url(short_url):
