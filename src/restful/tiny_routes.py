@@ -11,20 +11,18 @@ This architecture makes more sense as it allows to setup tiny as
 an  in-house url shortener service accessible in a distributed network. 
 """
 
-from flask import Flask
+from flask.blueprints import Blueprint
 from flask.globals import request
-from database.cluster import initRedisCluster
 from mapper.mappers import to_short_url, to_long_url
 from utils.utilities import validate_url
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+tiny = Blueprint('tiny',__name__)
 
-@app.route('/')
+@tiny.route('/')
 def welcome():
-    return 'Welcome to tiny.\n \'tiny\' is a scalable and light-weight URL shortener service'
+    return 'Welcome to tiny, a light-weight and scalable URL-shortener service.'
 
-@app.route('/tiny/short',methods=['POST','GET','HEAD','PUT','DELETE'])
+@tiny.route('/tiny/short',methods=['POST','GET','HEAD','PUT','DELETE'])
 def shorten_url():
     if(request.method == 'POST'):
         long_url = request.form['url']
@@ -33,15 +31,11 @@ def shorten_url():
         if(validate_url(long_url)):
             return to_short_url(long_url)
         else:
-            return '<h1>Invalid url</h1>' 
+            return '<h1> Not a valid url </h1>' 
     else:
-        return '<h1>Method not allowed</h1>', 405
+        return '<h1> Method not allowed </h1>', 405
 
-@app.route('/tiny/<short_url>', methods=['GET'])
+@tiny.route('/tiny/<short_url>', methods=['GET'])
 def get_long_url(short_url):
-    return to_long_url(short_url)
-
-if __name__ == '__main__':
-    app.logger.debug("Bootstrapping tiny, a url-shortener service.")
-    initRedisCluster()
-    app.run(debug=True)
+    response =  to_long_url(short_url)
+    return '<h1>'+str(response)+'</h1>'

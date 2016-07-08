@@ -11,3 +11,8 @@
 #settings
 /.settings/*
 
+
+#database
+*db
+*.sqlite
+

@@ -16,7 +16,6 @@ Feature set is as follows:
 @version:  1.0
 @since:  1.0
 '''
-from mapper.mock import insert, get
 from database.cluster import get_current_uuid
 
 #Sequence of possible characters in a url.
@@ -30,20 +29,23 @@ CHARSET_SIZE = 62
 #converts an numeric id to short url.
 def to_short_url(long_url):
     
+    from model.models import UrlMapping
     short_url = ""
     uuid = get_current_uuid()
     while uuid:
         short_url = charset[uuid % CHARSET_SIZE] + short_url
         uuid = (uuid/CHARSET_SIZE)
     
-    #Store in the mock cache.
-    insert(short_url, long_url)
-    
+    urlmap = UrlMapping(uuid, short_url, long_url)
+    urlmap.save()
+
     #return the shorter version.
     return short_url
 
 #converts from short url to numeric id.
 def to_long_url(short_url):
+    
+    from model.models import UrlMapping
     
     uuid = 0
     for i in range(0, len(short_url)):    
@@ -54,6 +56,4 @@ def to_long_url(short_url):
         elif(ord('0') <= ord(short_url[i]) and ord(short_url[i]) <= ord('9')):
             uuid = ((uuid * CHARSET_SIZE) + ord(short_url[i]) - ord('0') + 52)
     
-    
-    #return uuid
-    return get(short_url)
+    return UrlMapping.fetch(uuid, short_url)
