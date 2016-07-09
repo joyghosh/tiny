@@ -10,7 +10,7 @@ Restful API routes to access tiny url shortener as a service.
 This architecture makes more sense as it allows to setup tiny as 
 an  in-house url shortener service accessible in a distributed network. 
 """
-
+from flask import redirect, jsonify
 from flask.blueprints import Blueprint
 from flask.globals import request
 from mapper.mappers import to_short_url, to_long_url
@@ -38,4 +38,8 @@ def shorten_url():
 @tiny.route('/tiny/<short_url>', methods=['GET'])
 def get_long_url(short_url):
     response =  to_long_url(short_url)
-    return '<h1>'+str(response)+'</h1>'
+    if(not response == None):
+        return redirect(response, code=302)
+    else:
+        return jsonify(result="no url-map found")
+#     return '<h1>'+str(response)+'</h1>'
