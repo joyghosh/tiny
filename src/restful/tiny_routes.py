@@ -35,6 +35,7 @@ def shorten_url():
     else:
         return '<h1> Method not allowed </h1>', 405
 
+
 @tiny.route('/tiny/<short_url>', methods=['GET'])
 def get_long_url(short_url):
     response =  to_long_url(short_url)
@@ -42,4 +43,3 @@ def get_long_url(short_url):
         return redirect(response, code=302)
     else:
         return jsonify(result="no url-map found")
-#     return '<h1>'+str(response)+'</h1>'

@@ -10,8 +10,6 @@ A Gateway for all CRUD operations on url mapping resource.
 '''
 
 from sqlalchemy.orm import sessionmaker
-# engine = create_engine('sqlite:///tiny.db')
-# Base.metadata.bind = engine
 
 def createOrUpdate(urlmap):
     
