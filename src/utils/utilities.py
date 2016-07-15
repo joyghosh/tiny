@@ -25,3 +25,9 @@ def validate_url(url):
         return False
     
     return True
+
+'''
+Utility method to from 
+'''
+def db_connection_string(db_vendor, username, passwd):
+    pass

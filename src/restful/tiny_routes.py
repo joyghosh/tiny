@@ -22,6 +22,7 @@ tiny = Blueprint('tiny',__name__)
 def welcome():
     return 'Welcome to tiny, a light-weight and scalable URL-shortener service.'
 
+
 @tiny.route('/tiny/short',methods=['POST','GET','HEAD','PUT','DELETE'])
 def shorten_url():
     if(request.method == 'POST'):
@@ -34,6 +35,7 @@ def shorten_url():
             return '<h1> Not a valid url </h1>' 
     else:
         return '<h1> Method not allowed </h1>', 405
+
 
 
 @tiny.route('/tiny/<short_url>', methods=['GET'])

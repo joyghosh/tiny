@@ -1,8 +1,9 @@
 from flask import Flask
-from configuration.config import config
 from database.cluster import initRedisCluster
 from sqlalchemy import create_engine
+from sqlalchemy.engine.url import URL
 from model.models import Base
+from configuration import config
 
 #Initializes Flask application.
 app = Flask(__name__)
@@ -14,7 +15,8 @@ app.debug = True
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
-engine = create_engine('sqlite:///tiny.db')
+#engine = create_engine('sqlite:///tiny.db')
+engine = create_engine(URL(**config.DATABASE))
 
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.
