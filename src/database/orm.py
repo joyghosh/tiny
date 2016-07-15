@@ -10,6 +10,7 @@ A Gateway for all CRUD operations on url mapping resource.
 '''
 
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import and_
 
 def createOrUpdate(urlmap):
     
@@ -17,11 +18,11 @@ def createOrUpdate(urlmap):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     
-    obj = get(urlmap.uuid, urlmap.short_url) 
-    if(obj == None):
-        session.add(urlmap)
-        session.commit()
-        obj = urlmap
+#     obj = get(urlmap.uuid, urlmap.short_url) 
+#     if(obj == None):
+    session.add(urlmap)
+    session.commit()
+    obj = urlmap
     
     print obj
     return obj
@@ -34,6 +35,21 @@ def delete(urlmap):
     session.delete(urlmap)
     session.commit()
 
+def exists(long_url):
+    
+    from restful import engine
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    
+    from model.models import UrlMapping
+    result = session.query(UrlMapping).filter(UrlMapping.url == long_url).first()
+    print result
+    
+    if(not result == None):
+        return result.short_url
+    else:
+        return None
+
 def get(uuid, short_url):
     
     from restful import engine
@@ -41,7 +57,7 @@ def get(uuid, short_url):
     session = DBSession()
     
     from model.models import UrlMapping
-    result = session.query(UrlMapping).filter(UrlMapping.short_url == short_url).first()
+    result = session.query(UrlMapping).filter(UrlMapping.uuid == uuid).filter(UrlMapping.short_url == short_url).first()
     print result
     
     if(not result == None):

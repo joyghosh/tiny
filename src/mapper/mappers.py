@@ -30,15 +30,21 @@ CHARSET_SIZE = 62
 def to_short_url(long_url):
     
     from model.models import UrlMapping
-    short_url = ""
-    uuid = get_current_uuid()
-    while uuid:
-        short_url = charset[uuid % CHARSET_SIZE] + short_url
-        uuid = (uuid/CHARSET_SIZE)
     
-    urlmap = UrlMapping(uuid, short_url, long_url)
-    urlmap.save()
-
+    short_url = UrlMapping.exists(long_url)
+    
+    if(short_url == None):
+        short_url = ""
+        uuid = get_current_uuid()
+        n = uuid
+        while n:
+            short_url = charset[n % CHARSET_SIZE] + short_url
+            n = (n/CHARSET_SIZE)
+        
+        print "uuid is "+str(uuid)
+        urlmap = UrlMapping(uuid, short_url, long_url)
+        urlmap.save()
+    
     #return the shorter version.
     return short_url
 
@@ -56,4 +62,5 @@ def to_long_url(short_url):
         elif(ord('0') <= ord(short_url[i]) and ord(short_url[i]) <= ord('9')):
             uuid = ((uuid * CHARSET_SIZE) + ord(short_url[i]) - ord('0') + 52)
     
+    print "backtracked uuid "+str(uuid)
     return UrlMapping.fetch(uuid, short_url)

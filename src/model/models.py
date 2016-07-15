@@ -8,9 +8,7 @@ Created on 02-Jul-2016
 import datetime
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import create_engine 
-
-from database.orm import createOrUpdate, delete, get
+from database.orm import createOrUpdate, delete, get, exists
 
 Base = declarative_base()
 
@@ -54,12 +52,7 @@ class UrlMapping(Base):
     @staticmethod
     def fetch(uuid, short_url):
         return get(uuid, short_url)
-
-
-# Create an engine that stores data in the local directory's
-# sqlalchemy_example.db file.
-# engine = create_engine('sqlite:///tiny.db')
-
-# Create all tables in the engine. This is equivalent to "Create Table"
-# statements in raw SQL.
-# Base.metadata.create_all(engine)
+    
+    @staticmethod
+    def exists(long_url):
+        return exists(long_url)

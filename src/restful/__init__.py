@@ -17,7 +17,7 @@ app.debug = True
 # sqlalchemy_example.db file.
 #engine = create_engine('sqlite:///tiny.db')
 engine = create_engine(URL(**config.DATABASE))
-
+print engine
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.
 
